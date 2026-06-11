@@ -258,7 +258,7 @@ h3 {
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycbw1sFrbMXwW38fvG2GxyhvsmqeWMWuqiQtyBKzL_HJWf60Tl9hRqYKNSqiy2c7LbS4G/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwYu8CFEHD3syCcQP0_lOKdpujPX6dyV5Dt85FmcD1FYYBbLSb3YN7JBXsScR60LLxl/exec";
 
 let dates = [];
 let answers = [];
@@ -319,10 +319,12 @@ fetch(API_URL)
   const box = document.getElementById("dates");
   let currentMonth = "";
 
-  data.dates.forEach(d => {
+data.dates.forEach(d => {
 
-    const display = String(d);
-    const count = data.counts?.[display] || 0;
+  const display = String(d);
+
+  const count = data.counts?.[display] || 0;
+  const lesson = data.lessons?.[display] || "";
     const [m, day] = display.split("/").map(Number);
 
     if(currentMonth !== m){
@@ -345,11 +347,13 @@ fetch(API_URL)
     div.className = "date-card";
 
 div.innerHTML = `
-  <div>${display}</div>
+  <div>
+    <strong>${display}</strong>
+    ${lesson ? "　" + lesson : ""}
+  </div>
 
   <div class="attendance-info">
-    参加予定：${count}名<br>
-    ${getDayMessage(count)}
+    参加予定：${count}名　|　${getDayMessage(count)}
   </div>
 
   <div class="btn-group">
