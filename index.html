@@ -210,6 +210,15 @@ h3 {
   line-height:1.5;
 }
 
+/* 参加予定人数テキスト */
+.attendance-info{
+  margin-top:4px;
+  margin-bottom:8px;
+  font-size:13px;
+  color:#666;
+  line-height:1.4;
+}
+
 </style>
 </head>
 
@@ -249,10 +258,36 @@ h3 {
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxndqn4_IctToHE4rAbawwjcF5sVR6yCtDR8pOjiQJz_vf_BdQct6vDC-jzpqMGQKTb/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbw1sFrbMXwW38fvG2GxyhvsmqeWMWuqiQtyBKzL_HJWf60Tl9hRqYKNSqiy2c7LbS4G/exec";
 
 let dates = [];
 let answers = [];
+
+// =======================
+// 参加人数表示
+// =======================
+
+function getDayMessage(count){
+
+  if(count === 0){
+    return "🌱 参加予定募集中";
+  }
+
+  if(count === 1){
+    return "🎨 先生独り占めDAY";
+  }
+
+  if(count === 2){
+    return "✏️ じっくり制作DAY";
+  }
+
+  if(count === 3){
+    return "🙌 わいわい制作DAY";
+  }
+
+  return "🌈 にぎやかアトリエDAY";
+}
+
 
 // =======================
 // 保存
@@ -287,6 +322,7 @@ fetch(API_URL)
   data.dates.forEach(d => {
 
     const display = String(d);
+    const count = data.counts?.[display] || 0;
     const [m, day] = display.split("/").map(Number);
 
     if(currentMonth !== m){
@@ -308,9 +344,16 @@ fetch(API_URL)
     const div = document.createElement("div");
     div.className = "date-card";
 
-    div.innerHTML = `
-      <div>${display}</div>
-      <div class="btn-group">
+div.innerHTML = `
+  <div>${display}</div>
+
+  <div class="attendance-info">
+    参加予定：${count}名<br>
+    ${getDayMessage(count)}
+  </div>
+
+  <div class="btn-group">
+
         <button onclick="setAns(${i},'○',this)">○</button>
         <button onclick="setAns(${i},'△',this)">△</button>
         <button onclick="setAns(${i},'×',this)">×</button>
