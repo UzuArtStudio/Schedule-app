@@ -316,25 +316,15 @@ fetch(API_URL)
 .then(res => res.json())
 .then(data => {
 
-   // 通信エラー時のアラート表示
-    document.getElementById("loading").style.display = "none";
-  })
-  .catch(err => {
-    document.querySelector("#loading p").textContent =
-      "通信に失敗しました。しばらくしてから再読み込みしてください。";
-    console.error(err);
-  })
-
   const box = document.getElementById("dates");
   let currentMonth = "";
 
-data.dates.forEach(d => {
+  data.dates.forEach(d => {
 
-  const display = String(d);
-
-  const count = data.counts?.[display] || 0;
-  const lesson = data.lessons?.[display] || "";
-    const [m, day] = display.split("/").map(Number);
+    const display = String(d);
+    const count = data.counts?.[display] || 0;
+    const lesson = data.lessons?.[display] || "";
+    const [m] = display.split("/").map(Number);
 
     if(currentMonth !== m){
       currentMonth = m;
@@ -345,28 +335,25 @@ data.dates.forEach(d => {
     }
 
     const i = dates.length;
-
     dates.push(display);
 
-    // 復元データがあれば使う
     const savedAnswer = savedData?.answers?.[i] || "";
     answers.push(savedAnswer);
 
     const div = document.createElement("div");
     div.className = "date-card";
 
-div.innerHTML = `
-  <div>
-    <strong>${display}</strong>
-    ${lesson ? "　" + lesson : ""}
-  </div>
+    div.innerHTML = `
+      <div>
+        <strong>${display}</strong>
+        ${lesson ? "　" + lesson : ""}
+      </div>
 
-  <div class="attendance-info">
-    参加予定：${count}名　|　${getDayMessage(count)}
-  </div>
+      <div class="attendance-info">
+        参加予定：${count}名　|　${getDayMessage(count)}
+      </div>
 
-  <div class="btn-group">
-
+      <div class="btn-group">
         <button onclick="setAns(${i},'○',this)">○</button>
         <button onclick="setAns(${i},'△',this)">△</button>
         <button onclick="setAns(${i},'×',this)">×</button>
@@ -375,30 +362,37 @@ div.innerHTML = `
 
     box.appendChild(div);
 
-    // ボタン状態復元
     if(savedAnswer){
-      const btns = div.querySelectorAll("button");
-      btns.forEach(b=>{
-        if(b.textContent === savedAnswer){
+      div.querySelectorAll("button").forEach(b=>{
+        if(b.textContent===savedAnswer){
           b.classList.add("selected");
         }
       });
     }
+
   });
 
-  // 名前・メール復元
   if(savedData){
     document.getElementById("name").value = savedData.name || "";
     document.getElementById("email").value = savedData.email || "";
     document.getElementById("note").value = savedData.note || "";
   }
 
-  // 入力変更で保存
   document.getElementById("name").addEventListener("input", saveData);
   document.getElementById("email").addEventListener("input", saveData);
   document.getElementById("note").addEventListener("input", saveData);
 
   document.getElementById("loading").style.display = "none";
+
+})
+.catch(err=>{
+
+  document.getElementById("loading").style.display = "none";
+
+  alert("読み込みに失敗しました。");
+
+  console.error(err);
+
 });
 
 // =======================
