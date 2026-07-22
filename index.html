@@ -258,7 +258,7 @@ h3 {
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycbzn8jiHSGrdq7Wvh22vqt-LNFentZ1d-cLso5IdB8beTyh_qkFQIZZYIpk8SERVuYzQpw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwyCnIU2zQWQ7PUdWjAcwdG021_8mXFsLybfKL_vLBTCQ4pzWPSMClT-Cg9nWCNa2K4dw/exec";
 
 let dates = [];
 let answers = [];
@@ -315,6 +315,23 @@ const savedData = loadData();
 fetch(API_URL)
 .then(res => res.json())
 .then(data => {
+// 今の処理
+
+    document.getElementById("loading").style.display = "none";
+
+  })
+
+  .catch(err => {
+
+    console.error(err);
+
+    document.querySelector("#loading p").textContent =
+
+      "読み込みに失敗しました";
+
+    alert(err);
+
+  });
 
   const box = document.getElementById("dates");
   let currentMonth = "";
