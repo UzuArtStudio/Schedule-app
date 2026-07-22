@@ -315,23 +315,11 @@ const savedData = loadData();
 fetch(API_URL)
 .then(res => res.json())
 .then(data => {
-// 今の処理
 
-    document.getElementById("loading").style.display = "none";
-
-  })
-
-  .catch(err => {
-
-    console.error(err);
-
-    document.querySelector("#loading p").textContent =
-
-      "読み込みに失敗しました";
-
-    alert(err);
-
-  });
+//エラー確認用
+alert("ここまで来た");
+document.getElementById("loading").style.display = "none";
+//ここまで
 
   const box = document.getElementById("dates");
   let currentMonth = "";
