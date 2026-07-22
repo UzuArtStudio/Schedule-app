@@ -316,10 +316,14 @@ fetch(API_URL)
 .then(res => res.json())
 .then(data => {
 
-//エラー確認用
-alert("ここまで来た");
-document.getElementById("loading").style.display = "none";
-//ここまで
+   // 通信エラー時のアラート表示
+    document.getElementById("loading").style.display = "none";
+  })
+  .catch(err => {
+    document.querySelector("#loading p").textContent =
+      "通信に失敗しました。しばらくしてから再読み込みしてください。";
+    console.error(err);
+  })
 
   const box = document.getElementById("dates");
   let currentMonth = "";
