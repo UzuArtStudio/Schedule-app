@@ -6,7 +6,13 @@
 <!-- ★これ絶対必要 -->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
+<link rel="icon" href="https://uzuartstudio.github.io/Schedule-app/icon.png">
+<link rel="apple-touch-icon" href="https://uzuartstudio.github.io/Schedule-app/icon.png">
+
+<title>うず絵画教室｜出欠</title>
+
 <style>
+
 html {
   font-size: 16px;
 }
@@ -21,7 +27,7 @@ body {
 
 /* 全体 */
 .container {
-  max-width: 500px;
+  max-width: 600px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -42,6 +48,19 @@ input {
   border-radius: 8px;
   border: 1px solid #ccc;
   box-sizing: border-box;
+}
+
+textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 12px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: sans-serif;
 }
 
 /* 日付ブロック */
@@ -66,11 +85,7 @@ button {
   border-radius: 8px;
   border: 1px solid #ccc;
   background: white;
-}
-
-.selected {
-  background: #333;
-  color: white;
+  font-weight: bold;
 }
 
 /* 月見出し */
@@ -78,6 +93,96 @@ h3 {
   margin-top: 20px;
   font-size: 16px;
   color: #666;
+}
+
+/* =======================
+   出欠ボタン
+   ======================= */
+
+.btn-group button {
+  position: relative;
+  background: white;
+  border: 2px solid #ddd;
+  color: transparent;
+  height: 52px;
+  transition: 0.2s;
+}
+
+/* ○ */
+.btn-group button:nth-child(1)::after {
+  content: "";
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid #4DA6FF;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+/* △ */
+.btn-group button:nth-child(2)::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-bottom: 20px solid #FFD95A;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+/* × */
+.btn-group button:nth-child(3)::before,
+.btn-group button:nth-child(3)::after {
+  content: "";
+  width: 24px;
+  height: 3px;
+  background: #FFB347;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  border-radius: 999px;
+}
+
+.btn-group button:nth-child(3)::before {
+  transform: rotate(45deg);
+}
+
+.btn-group button:nth-child(3)::after {
+  transform: rotate(-45deg);
+}
+
+/* 選択状態 */
+.btn-group button.selected {
+  background: #f3f9ff;
+  border-color: #4DA6FF;
+  transform: scale(1.03);
+}
+
+/* =======================
+   参加予定人数
+   ======================= */
+
+.attendance-info {
+  margin-top: 4px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* =======================
+   補足説明
+   ======================= */
+
+.sub-note {
+  font-size: 13px;
+  color: #888;
+  margin-top: -6px;
+  margin-bottom: 16px;
+  line-height: 1.5;
 }
 
 /* =======================
@@ -100,10 +205,25 @@ h3 {
   gap: 8px;
 }
 
+/*
+   時間ボタンは○△×とは別デザイン
+*/
 .time-btn {
   flex: 1;
   padding: 10px 4px;
   font-size: 14px;
+  height: auto !important;
+  color: #333 !important;
+  border: 1px solid #ccc !important;
+  background: white !important;
+  position: static !important;
+  transform: none !important;
+}
+
+.time-btn.selected {
+  background: #f3f9ff !important;
+  border: 2px solid #4DA6FF !important;
+  color: #333 !important;
 }
 
 .time-count {
@@ -113,46 +233,48 @@ h3 {
   margin-top: 2px;
 }
 
-.time-btn.selected .time-count {
-  color: white;
-}
-
 .time-note {
   margin-top: 6px;
   font-size: 12px;
   color: #777;
 }
 
-/* 送信ボタン */
+/* =======================
+   送信ボタン
+   ======================= */
+
 .submit-btn {
   width: 100%;
   margin-top: 20px;
   padding: 14px;
   font-size: 18px;
-  background: #4CAF50;
+  background: #4DA6FF;
   color: white;
   border: none;
   border-radius: 10px;
 }
 
-/* ローディング */
+/* =======================
+   ローディング
+   ======================= */
+
 #loading {
   position: fixed;
   inset: 0;
   background: white;
-  display:flex;
+  display: flex;
   flex-direction: column;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 
 .spinner {
-  width:40px;
-  height:40px;
-  border:4px solid #ddd;
-  border-top:4px solid #333;
-  border-radius:50%;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #ddd;
+  border-top: 4px solid #4DA6FF;
+  border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 
@@ -161,6 +283,7 @@ h3 {
     transform: rotate(360deg);
   }
 }
+
 </style>
 </head>
 
@@ -176,13 +299,26 @@ h3 {
 <h2>うず絵画教室 出欠</h2>
 
 <input id="name" placeholder="お名前">
+
 <input id="email" placeholder="メール（任意）">
 
-<p style="font-size:14px; color:#666;">
+<p class="sub-note">
 入力内容の確認メールをお送りします
 </p>
 
 <div id="dates"></div>
+
+<label for="note">その他追記</label>
+
+<textarea
+  id="note"
+  placeholder="来室時間（例：16:30）や連絡事項など"
+></textarea>
+
+<p class="sub-note">
+※レッスン当日12:00以降の変更は、
+出欠フォームではなく直接ご連絡をお願いいたします。
+</p>
 
 <button class="submit-btn" onclick="submitData()">送信</button>
 
@@ -190,14 +326,103 @@ h3 {
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycbzPtltsTn_V23gmfHAiUEjG4IHGfupg1YZnrdEXvLnbf0UuhSIRo61BDWSgRI2o7HZccA/exec";
+const API_URL =
+"https://script.google.com/macros/s/AKfycbzoRsQefR7uDn16YwJ6OqQnfuD4Flt8-mQ0nqT97aaTiM_h5ew532DGI01sxMxCdbE/exec";
+
 
 let dates = [];
 let answers = [];
 let times = [];
 
+let lessons = {};
 let availableTimes = {};
 let timeCounts = {};
+
+
+// =======================
+// 参加人数によるDAY表示
+// =======================
+
+function getDayMessage(count) {
+
+  if (count === 0) {
+    return "🌱 参加予定募集中";
+  }
+
+  if (count === 1) {
+    return "🎨 先生独り占めDAY";
+  }
+
+  if (count === 2) {
+    return "✏️ じっくり制作DAY";
+  }
+
+  if (count === 3) {
+    return "🙌 わいわい制作DAY";
+  }
+
+  return "🌈 にぎやかアトリエDAY";
+}
+
+
+// =======================
+// 保存
+// =======================
+
+function saveData() {
+
+  localStorage.setItem(
+    "formData",
+    JSON.stringify({
+
+      name:
+        document.getElementById("name").value,
+
+      email:
+        document.getElementById("email").value,
+
+      note:
+        document.getElementById("note").value,
+
+      answers:
+        answers,
+
+      times:
+        times
+
+    })
+  );
+}
+
+
+// =======================
+// 復元
+// =======================
+
+function loadData() {
+
+  const saved =
+    localStorage.getItem("formData");
+
+  if (!saved) {
+    return null;
+  }
+
+  try {
+
+    return JSON.parse(saved);
+
+  } catch (e) {
+
+    console.error(e);
+
+    return null;
+
+  }
+}
+
+
+const savedData = loadData();
 
 
 // =======================
@@ -205,51 +430,121 @@ let timeCounts = {};
 // =======================
 
 fetch(API_URL)
+
 .then(res => res.json())
+
 .then(data => {
 
-  const box = document.getElementById("dates");
+  const box =
+    document.getElementById("dates");
+
   let currentMonth = "";
 
-  availableTimes = data.availableTimes || {};
-  timeCounts = data.timeCounts || {};
+  // GASから受け取ったデータ
+  lessons =
+    data.lessons || {};
+
+  availableTimes =
+    data.availableTimes || {};
+
+  timeCounts =
+    data.timeCounts || {};
+
 
   data.dates.forEach(d => {
 
-    const display = String(d);
-    const [m, day] = display.split("/").map(Number);
+    const display =
+      String(d);
 
-    if(currentMonth !== m){
+    const count =
+      data.counts?.[display] || 0;
+
+    const lesson =
+      data.lessons?.[display] || "";
+
+    const [m] =
+      display.split("/").map(Number);
+
+
+    // =======================
+    // 月見出し
+    // =======================
+
+    if (currentMonth !== m) {
+
       currentMonth = m;
 
-      const h = document.createElement("h3");
-      h.textContent = m + "月";
+      const h =
+        document.createElement("h3");
+
+      h.textContent =
+        m + "月";
+
       box.appendChild(h);
+
     }
 
-    const i = dates.length;
+
+    // =======================
+    // データ保存
+    // =======================
+
+    const i =
+      dates.length;
 
     dates.push(display);
-    answers.push("");
-    times.push("");
 
-    const div = document.createElement("div");
-    div.className = "date-card";
+
+    const savedAnswer =
+      savedData?.answers?.[i] || "";
+
+    const savedTime =
+      savedData?.times?.[i] || "";
+
+    answers.push(savedAnswer);
+
+    times.push(savedTime);
+
+
+    // =======================
+    // 日付カード
+    // =======================
+
+    const div =
+      document.createElement("div");
+
+    div.className =
+      "date-card";
+
 
     div.innerHTML = `
-      <div>${display}</div>
+
+      <div>
+        <strong>${display}</strong>
+        ${lesson ? "　" + lesson : ""}
+      </div>
+
+      <div class="attendance-info">
+        参加予定：${count}名　|　${getDayMessage(count)}
+      </div>
 
       <div class="btn-group">
 
-        <button onclick="setAns(${i},'○',this)">
+        <button
+          onclick="setAns(${i},'○',this)"
+        >
           ○
         </button>
 
-        <button onclick="setAns(${i},'△',this)">
+        <button
+          onclick="setAns(${i},'△',this)"
+        >
           △
         </button>
 
-        <button onclick="setAns(${i},'×',this)">
+        <button
+          onclick="setAns(${i},'×',this)"
+        >
           ×
         </button>
 
@@ -257,35 +552,127 @@ fetch(API_URL)
 
       <div
         id="time-area-${i}"
-        class="time-area">
+        class="time-area"
+      >
       </div>
+
     `;
+
 
     box.appendChild(div);
 
+
+    // =======================
+    // 出欠状態の復元
+    // =======================
+
+    if (savedAnswer) {
+
+      div
+        .querySelectorAll(".btn-group button")
+        .forEach(b => {
+
+          if (
+            b.textContent.trim()
+            === savedAnswer
+          ) {
+
+            b.classList.add("selected");
+
+          }
+
+        });
+
+    }
+
+
+    // =======================
+    // ○なら時間も復元
+    // =======================
+
+    if (
+      savedAnswer === "○" &&
+      availableTimes[display] &&
+      availableTimes[display].length > 0
+    ) {
+
+      showTimeArea(i);
+
+    }
+
   });
 
-  document.getElementById("loading").style.display = "none";
+
+  // =======================
+  // 名前・メール・追記復元
+  // =======================
+
+  if (savedData) {
+
+    document.getElementById("name").value =
+      savedData.name || "";
+
+    document.getElementById("email").value =
+      savedData.email || "";
+
+    document.getElementById("note").value =
+      savedData.note || "";
+
+  }
+
+
+  // =======================
+  // 入力変更で保存
+  // =======================
+
+  document
+    .getElementById("name")
+    .addEventListener("input", saveData);
+
+  document
+    .getElementById("email")
+    .addEventListener("input", saveData);
+
+  document
+    .getElementById("note")
+    .addEventListener("input", saveData);
+
+
+  // =======================
+  // ローディング終了
+  // =======================
+
+  document
+    .getElementById("loading")
+    .style.display = "none";
 
 })
+
 .catch(err => {
 
-  console.error(err);
+  document
+    .getElementById("loading")
+    .style.display = "none";
 
-  document.querySelector("#loading p").textContent =
-    "読み込みに失敗しました。ページを再読み込みしてください。";
+  alert(
+    "読み込みに失敗しました。"
+  );
+
+  console.error(err);
 
 });
 
 
 // =======================
-// 出欠選択
+// 出欠セット
 // =======================
 
-function setAns(i,val,btn){
+function setAns(i, val, btn) {
 
   answers[i] = val;
 
+
+  // 選択状態
   btn.parentNode
     .querySelectorAll("button")
     .forEach(b =>
@@ -294,22 +681,32 @@ function setAns(i,val,btn){
 
   btn.classList.add("selected");
 
+
   const area =
-    document.getElementById(`time-area-${i}`);
+    document.getElementById(
+      `time-area-${i}`
+    );
 
 
+  // =======================
   // ○の場合だけ時間を表示
-  if(val === "○"){
+  // =======================
+
+  if (val === "○") {
 
     showTimeArea(i);
 
-  }else{
+  } else {
 
-    area.style.display = "none";
+    area.style.display =
+      "none";
 
     times[i] = "";
 
   }
+
+
+  saveData();
 
 }
 
@@ -318,10 +715,12 @@ function setAns(i,val,btn){
 // 時間選択表示
 // =======================
 
-function showTimeArea(i){
+function showTimeArea(i) {
 
   const area =
-    document.getElementById(`time-area-${i}`);
+    document.getElementById(
+      `time-area-${i}`
+    );
 
   const date =
     dates[i];
@@ -330,9 +729,11 @@ function showTimeArea(i){
     availableTimes[date] || [];
 
 
-  if(list.length === 0){
+  // 時間設定がない場合
+  if (list.length === 0) {
 
-    area.style.display = "none";
+    area.style.display =
+      "none";
 
     return;
 
@@ -346,15 +747,18 @@ function showTimeArea(i){
     </div>
 
     <div class="time-group">
+
   `;
 
 
   list.forEach(time => {
 
     const count =
-      (timeCounts[date] &&
-       timeCounts[date][time])
-      || 0;
+      (
+        timeCounts[date] &&
+        timeCounts[date][time]
+      ) || 0;
+
 
     const selected =
       times[i] === time
@@ -365,6 +769,7 @@ function showTimeArea(i){
     html += `
 
       <button
+        type="button"
         class="time-btn ${selected}"
         onclick="setTime(${i}, '${time}', this)"
       >
@@ -393,9 +798,11 @@ function showTimeArea(i){
   `;
 
 
-  area.innerHTML = html;
+  area.innerHTML =
+    html;
 
-  area.style.display = "block";
+  area.style.display =
+    "block";
 
 }
 
@@ -404,9 +811,10 @@ function showTimeArea(i){
 // 時間選択
 // =======================
 
-function setTime(i,time,btn){
+function setTime(i, time, btn) {
 
   times[i] = time;
+
 
   btn.parentNode
     .querySelectorAll(".time-btn")
@@ -414,7 +822,11 @@ function setTime(i,time,btn){
       b.classList.remove("selected")
     );
 
+
   btn.classList.add("selected");
+
+
+  saveData();
 
 }
 
@@ -423,46 +835,84 @@ function setTime(i,time,btn){
 // 送信
 // =======================
 
-function submitData(){
+function submitData() {
 
   const name =
-    document.getElementById("name").value.trim();
+    document
+      .getElementById("name")
+      .value
+      .trim();
 
   const email =
-    document.getElementById("email").value.trim();
+    document
+      .getElementById("email")
+      .value
+      .trim();
+
+  const note =
+    document
+      .getElementById("note")
+      .value
+      .trim();
 
 
-  if(!name){
+  // =======================
+  // 名前チェック
+  // =======================
 
-    alert("名前を入力してください");
+  if (!name) {
+
+    alert(
+      "名前を入力してください"
+    );
 
     return;
 
   }
 
+
+  // =======================
+  // 出欠チェック
+  // =======================
 
   const hasAnswer =
-    answers.some(a => a !== "");
+    answers.some(
+      a => a !== ""
+    );
 
 
-  if(!hasAnswer){
+  if (!hasAnswer) {
 
-    alert("１つ以上選択してください");
+    alert(
+      "１つ以上選択してください"
+    );
 
     return;
 
   }
 
 
-  // ○を選んだ場合は時間も選択
-  for(let i = 0; i < dates.length; i++){
+  // =======================
+  // 時間チェック
+  // =======================
 
-    if(
+  for (
+    let i = 0;
+    i < dates.length;
+    i++
+  ) {
+
+    if (
+
       answers[i] === "○" &&
+
       availableTimes[dates[i]] &&
+
       availableTimes[dates[i]].length > 0 &&
+
       !times[i]
-    ){
+
+    ) {
 
       alert(
         `${dates[i]}の来校予定時間を選択してください`
@@ -475,23 +925,33 @@ function submitData(){
   }
 
 
-  document.querySelector("#loading p")
+  // =======================
+  // 送信中
+  // =======================
+
+  document
+    .querySelector("#loading p")
     .textContent = "送信中...";
 
-  document.getElementById("loading")
+
+  document
+    .getElementById("loading")
     .style.display = "flex";
 
 
-  fetch(API_URL,{
+  fetch(API_URL, {
 
-    method:"POST",
+    method: "POST",
 
-    body:JSON.stringify({
+    body: JSON.stringify({
+
       name,
       email,
+      note,
       dates,
       answers,
       times
+
     })
 
   })
@@ -500,11 +960,12 @@ function submitData(){
 
   .then(res => {
 
-    document.getElementById("loading")
+    document
+      .getElementById("loading")
       .style.display = "none";
 
 
-    if(res.ok){
+    if (res.ok) {
 
       document.body.innerHTML = `
 
@@ -513,17 +974,22 @@ function submitData(){
           margin-top:50px;
         ">
 
-          <h2>入力ありがとうございました</h2>
+          <h2>
+            入力ありがとうございました
+          </h2>
 
           <p>
             出欠を受け付けました。
           </p>
 
-          <button onclick="location.reload()" style="
-            margin-top:20px;
-            padding:12px 20px;
-            font-size:16px;
-          ">
+          <button
+            onclick="location.reload()"
+            style="
+              margin-top:20px;
+              padding:12px 20px;
+              font-size:16px;
+            "
+          >
             もう一度入力する
           </button>
 
@@ -531,10 +997,10 @@ function submitData(){
 
       `;
 
-    }else{
+    } else {
 
       alert(
-        "エラー："+res.error
+        "エラー：" + res.error
       );
 
     }
@@ -543,7 +1009,8 @@ function submitData(){
 
   .catch(err => {
 
-    document.getElementById("loading")
+    document
+      .getElementById("loading")
       .style.display = "none";
 
     console.error(err);
