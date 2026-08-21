@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 
-<!-- ★これ絶対必要 -->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 <link rel="icon" href="https://uzuartstudio.github.io/Schedule-app/icon.png">
@@ -12,7 +11,6 @@
 <title>うず絵画教室｜出欠</title>
 
 <style>
-
 html {
   font-size: 16px;
 }
@@ -25,7 +23,6 @@ body {
   justify-content: center;
 }
 
-/* 全体 */
 .container {
   max-width: 600px;
   width: 100%;
@@ -34,12 +31,10 @@ body {
   padding: 16px;
 }
 
-/* タイトル */
 h2 {
   text-align: center;
 }
 
-/* 入力欄 */
 input {
   width: 100%;
   padding: 12px;
@@ -63,7 +58,6 @@ textarea {
   font-family: sans-serif;
 }
 
-/* 日付ブロック */
 .date-card {
   background: white;
   padding: 12px;
@@ -71,7 +65,6 @@ textarea {
   border-radius: 10px;
 }
 
-/* ボタン */
 .btn-group {
   display: flex;
   gap: 8px;
@@ -88,7 +81,6 @@ button {
   font-weight: bold;
 }
 
-/* 月見出し */
 h3 {
   margin-top: 20px;
   font-size: 16px;
@@ -205,17 +197,14 @@ h3 {
   gap: 8px;
 }
 
-/*
-   時間ボタンは○△×とは別デザイン
-*/
 .time-btn {
   flex: 1;
   padding: 10px 4px;
   font-size: 14px;
   height: auto !important;
   color: #333 !important;
-  border: 1px solid #ccc !important;
   background: white !important;
+  border: 1px solid #ccc !important;
   position: static !important;
   transform: none !important;
 }
@@ -223,7 +212,6 @@ h3 {
 .time-btn.selected {
   background: #f3f9ff !important;
   border: 2px solid #4DA6FF !important;
-  color: #333 !important;
 }
 
 .time-count {
@@ -262,19 +250,19 @@ h3 {
   position: fixed;
   inset: 0;
   background: white;
-  display: flex;
+  display:flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #ddd;
-  border-top: 4px solid #4DA6FF;
-  border-radius: 50%;
+  width:40px;
+  height:40px;
+  border:4px solid #ddd;
+  border-top:4px solid #4DA6FF;
+  border-radius:50%;
   animation: spin 0.8s linear infinite;
 }
 
@@ -283,7 +271,6 @@ h3 {
     transform: rotate(360deg);
   }
 }
-
 </style>
 </head>
 
@@ -326,38 +313,39 @@ h3 {
 
 <script>
 
-const API_URL =
-"https://script.google.com/macros/s/AKfycbzPtltsTn_V23gmfHAiUEjG4IHGfupg1YZnrdEXvLnbf0UuhSIRo61BDWSgRI2o7HZccA/exec";
+
+
+const API_URL = "https://script.google.com/macros/s/AKfycbzPtltsTn_V23gmfHAiUEjG4IHGfupg1YZnrdEXvLnbf0UuhSIRo61BDWSgRI2o7HZccA/exec";
 
 
 let dates = [];
 let answers = [];
 let times = [];
 
-let lessons = {};
 let availableTimes = {};
 let timeCounts = {};
+let lessons = {};
 
 
 // =======================
-// 参加人数によるDAY表示
+// 参加人数表示
 // =======================
 
-function getDayMessage(count) {
+function getDayMessage(count){
 
-  if (count === 0) {
+  if(count === 0){
     return "🌱 参加予定募集中";
   }
 
-  if (count === 1) {
+  if(count === 1){
     return "🎨 先生独り占めDAY";
   }
 
-  if (count === 2) {
+  if(count === 2){
     return "✏️ じっくり制作DAY";
   }
 
-  if (count === 3) {
+  if(count === 3){
     return "🙌 わいわい制作DAY";
   }
 
@@ -369,7 +357,7 @@ function getDayMessage(count) {
 // 保存
 // =======================
 
-function saveData() {
+function saveData(){
 
   localStorage.setItem(
     "formData",
@@ -392,6 +380,7 @@ function saveData() {
 
     })
   );
+
 }
 
 
@@ -399,26 +388,27 @@ function saveData() {
 // 復元
 // =======================
 
-function loadData() {
+function loadData(){
 
   const saved =
     localStorage.getItem("formData");
 
-  if (!saved) {
+  if(!saved){
     return null;
   }
 
-  try {
+  try{
 
     return JSON.parse(saved);
 
-  } catch (e) {
+  }catch(e){
 
     console.error(e);
 
     return null;
 
   }
+
 }
 
 
@@ -431,7 +421,17 @@ const savedData = loadData();
 
 fetch(API_URL)
 
-.then(res => res.json())
+.then(res => {
+
+  if(!res.ok){
+    throw new Error(
+      "HTTP error: " + res.status
+    );
+  }
+
+  return res.json();
+
+})
 
 .then(data => {
 
@@ -440,7 +440,8 @@ fetch(API_URL)
 
   let currentMonth = "";
 
-  // GASから受け取ったデータ
+
+  // GASデータ
   lessons =
     data.lessons || {};
 
@@ -470,7 +471,7 @@ fetch(API_URL)
     // 月見出し
     // =======================
 
-    if (currentMonth !== m) {
+    if(currentMonth !== m){
 
       currentMonth = m;
 
@@ -485,15 +486,15 @@ fetch(API_URL)
     }
 
 
-    // =======================
-    // データ保存
-    // =======================
-
     const i =
       dates.length;
 
     dates.push(display);
 
+
+    // =======================
+    // 保存データ復元
+    // =======================
 
     const savedAnswer =
       savedData?.answers?.[i] || "";
@@ -531,30 +532,26 @@ fetch(API_URL)
       <div class="btn-group">
 
         <button
+          type="button"
           onclick="setAns(${i},'○',this)"
-        >
-          ○
-        </button>
+        >○</button>
 
         <button
+          type="button"
           onclick="setAns(${i},'△',this)"
-        >
-          △
-        </button>
+        >△</button>
 
         <button
+          type="button"
           onclick="setAns(${i},'×',this)"
-        >
-          ×
-        </button>
+        >×</button>
 
       </div>
 
       <div
         id="time-area-${i}"
         class="time-area"
-      >
-      </div>
+      ></div>
 
     `;
 
@@ -563,19 +560,19 @@ fetch(API_URL)
 
 
     // =======================
-    // 出欠状態の復元
+    // 出欠状態復元
     // =======================
 
-    if (savedAnswer) {
+    if(savedAnswer){
 
       div
         .querySelectorAll(".btn-group button")
         .forEach(b => {
 
-          if (
+          if(
             b.textContent.trim()
             === savedAnswer
-          ) {
+          ){
 
             b.classList.add("selected");
 
@@ -587,14 +584,14 @@ fetch(API_URL)
 
 
     // =======================
-    // ○なら時間も復元
+    // 時間状態復元
     // =======================
 
-    if (
+    if(
       savedAnswer === "○" &&
       availableTimes[display] &&
       availableTimes[display].length > 0
-    ) {
+    ){
 
       showTimeArea(i);
 
@@ -604,10 +601,10 @@ fetch(API_URL)
 
 
   // =======================
-  // 名前・メール・追記復元
+  // 名前など復元
   // =======================
 
-  if (savedData) {
+  if(savedData){
 
     document.getElementById("name").value =
       savedData.name || "";
@@ -638,10 +635,6 @@ fetch(API_URL)
     .addEventListener("input", saveData);
 
 
-  // =======================
-  // ローディング終了
-  // =======================
-
   document
     .getElementById("loading")
     .style.display = "none";
@@ -650,34 +643,30 @@ fetch(API_URL)
 
 .catch(err => {
 
-  document
-    .getElementById("loading")
-    .style.display = "none";
-
-  alert(
-    "読み込みに失敗しました。"
-  );
-
   console.error(err);
+
+  document.querySelector("#loading p")
+    .textContent =
+      "読み込みに失敗しました。ページを再読み込みしてください。";
 
 });
 
 
 // =======================
-// 出欠セット
+// 出欠選択
 // =======================
 
-function setAns(i, val, btn) {
+function setAns(i,val,btn){
 
   answers[i] = val;
 
 
-  // 選択状態
   btn.parentNode
     .querySelectorAll("button")
     .forEach(b =>
       b.classList.remove("selected")
     );
+
 
   btn.classList.add("selected");
 
@@ -688,15 +677,12 @@ function setAns(i, val, btn) {
     );
 
 
-  // =======================
-  // ○の場合だけ時間を表示
-  // =======================
-
-  if (val === "○") {
+  // ○なら時間表示
+  if(val === "○"){
 
     showTimeArea(i);
 
-  } else {
+  }else{
 
     area.style.display =
       "none";
@@ -715,7 +701,7 @@ function setAns(i, val, btn) {
 // 時間選択表示
 // =======================
 
-function showTimeArea(i) {
+function showTimeArea(i){
 
   const area =
     document.getElementById(
@@ -729,8 +715,7 @@ function showTimeArea(i) {
     availableTimes[date] || [];
 
 
-  // 時間設定がない場合
-  if (list.length === 0) {
+  if(list.length === 0){
 
     area.style.display =
       "none";
@@ -811,7 +796,7 @@ function showTimeArea(i) {
 // 時間選択
 // =======================
 
-function setTime(i, time, btn) {
+function setTime(i,time,btn){
 
   times[i] = time;
 
@@ -835,7 +820,7 @@ function setTime(i, time, btn) {
 // 送信
 // =======================
 
-function submitData() {
+function submitData(){
 
   const name =
     document
@@ -856,11 +841,7 @@ function submitData() {
       .trim();
 
 
-  // =======================
-  // 名前チェック
-  // =======================
-
-  if (!name) {
+  if(!name){
 
     alert(
       "名前を入力してください"
@@ -871,17 +852,13 @@ function submitData() {
   }
 
 
-  // =======================
-  // 出欠チェック
-  // =======================
-
   const hasAnswer =
     answers.some(
       a => a !== ""
     );
 
 
-  if (!hasAnswer) {
+  if(!hasAnswer){
 
     alert(
       "１つ以上選択してください"
@@ -893,16 +870,16 @@ function submitData() {
 
 
   // =======================
-  // 時間チェック
+  // ○の場合は時間必須
   // =======================
 
-  for (
+  for(
     let i = 0;
     i < dates.length;
     i++
-  ) {
+  ){
 
-    if (
+    if(
 
       answers[i] === "○" &&
 
@@ -912,7 +889,7 @@ function submitData() {
 
       !times[i]
 
-    ) {
+    ){
 
       alert(
         `${dates[i]}の来校予定時間を選択してください`
@@ -926,7 +903,7 @@ function submitData() {
 
 
   // =======================
-  // 送信中
+  // 送信
   // =======================
 
   document
@@ -939,11 +916,11 @@ function submitData() {
     .style.display = "flex";
 
 
-  fetch(API_URL, {
+  fetch(API_URL,{
 
-    method: "POST",
+    method:"POST",
 
-    body: JSON.stringify({
+    body:JSON.stringify({
 
       name,
       email,
@@ -965,7 +942,7 @@ function submitData() {
       .style.display = "none";
 
 
-    if (res.ok) {
+    if(res.ok){
 
       document.body.innerHTML = `
 
@@ -997,7 +974,7 @@ function submitData() {
 
       `;
 
-    } else {
+    }else{
 
       alert(
         "エラー：" + res.error
