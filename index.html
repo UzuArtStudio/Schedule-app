@@ -299,7 +299,7 @@ h3 {
 
 <textarea
   id="note"
-  placeholder="来室時間（例：16:30）や連絡事項など"
+  placeholder="連絡事項など"
 ></textarea>
 
 <p class="sub-note">
@@ -315,7 +315,7 @@ h3 {
 
 
 
-const API_URL = "https://script.google.com/macros/s/AKfycbw58ClhQd2j7_5BqPtr1eEWR0LvVMbY5CqW_cXiwx48Hy2QMr3VlzAjDpIjwsxXgIKbkg/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwUwXVv8em7wN5CI_Z5t1zQLiZ7SFLurbHskZz1oo3R5aT99bTSgY4UQkmpWH-mtQKSQA/exec";
 
 
 let dates = [];
@@ -637,7 +637,7 @@ fetch(API_URL)
 
   document.querySelector("#loading p")
     .textContent =
-      "読み込みに失敗しました。ページを再読み込みしてください。";
+      "読み込みに失敗しました。</br>ページを再読み込みしてください。";
 
 });
 
@@ -718,7 +718,7 @@ function showTimeArea(i){
   let html = `
 
     <div class="time-title">
-      来校予定時間（目安）
+      来室予定時間
     </div>
 
     <div class="time-group">
@@ -764,10 +764,6 @@ function showTimeArea(i){
 
   html += `
 
-    </div>
-
-    <div class="time-note">
-      ※来校時間は目安です
     </div>
 
   `;
