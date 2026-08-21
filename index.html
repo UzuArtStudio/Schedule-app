@@ -421,17 +421,7 @@ const savedData = loadData();
 
 fetch(API_URL)
 
-.then(res => {
-
-  if(!res.ok){
-    throw new Error(
-      "HTTP error: " + res.status
-    );
-  }
-
-  return res.json();
-
-})
+.then(res => res.json())
 
 .then(data => {
 
