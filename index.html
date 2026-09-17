@@ -23,6 +23,7 @@ body {
   justify-content: center;
 }
 
+
 .container {
   max-width: 600px;
   width: 100%;
@@ -342,14 +343,22 @@ function getDayMessage(count){
   }
 
   if(count === 2){
-    return "✏️ じっくり制作DAY";
+    return "✏️ じっくりDAY";
   }
 
   if(count === 3){
-    return "🙌 わいわい制作DAY";
+    return "🕊️ のびのびDAY";
+  }
+  
+　if(count === 4){
+    return "🙌 わいわいDAY";
   }
 
-  return "🌈 にぎやかアトリエDAY";
+　if(count === 5){
+    return "💪 もりもりDAY";
+  }
+
+  return "🌈 にぎやかDAY";
 }
 
 
